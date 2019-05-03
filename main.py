@@ -4,7 +4,12 @@ import random
 
 foodRatio = 0.1
 passRatio = 0.01
+alpha = 1 # mutation ratio
 
+def mutation_fusion(x1, x2):
+    if x1 > x2:
+        x1, x2 = x2, x1
+    return random.randint(max(0,x1-alpha), x2+alpha)
 
 def randomCell():
     p = random.random()
@@ -63,7 +68,7 @@ class World:
 
 
 class Sens:
-    def __init__(self, values=[1,1,1,1,1,1,1,1]):
+    def __init__(self, values=[1]*8):
         self.v = values
     def guess(self, terrain):
         self.v * terrain
@@ -71,13 +76,16 @@ class Sens:
 class creature:
     def __init__(self, energy=10, speed=(1,1), sens=(Sens(),Sens())):
         self.energy = energy
-        self.speed = random.randint(*speed)
-        self.sens = _fusion_sens(sens[0], sens[1])
+        self.speed = mutation_fusion(speed[0], speed[1])
         
-    def step(self):
-    
     def _fusion_sens(s1, s2):
+        v = [0] * 8
+        for i in range(8):
+            v[i] = mutation_fusion(s1[i], s2[i])
+        return v
         
+    def step(self, terrain):
+        self.energy -= self.speed*slef.speed
         
         
 if __name__ == "__main__":
